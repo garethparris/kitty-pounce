@@ -16,13 +16,16 @@ it happened to live.
 
 The immediate trigger was hardware: my Jiffy 75 keyboard has two rotary
 knobs. The right one is already spoken for -- volume and mute -- but the left
-one had nothing bound to it. A flat, wrap-around ring was the obvious fit for
-a knob: turn it one way or the other and step through every window, tab and
-OS window as a single continuous list. That turned out to be a genuinely
-faster way to find a specific agent than hunting through three separate
-navigation shortcuts. (I still use kitty's own built-in `ctrl+shift+l` to
-cycle layouts within an OS window -- a different axis entirely, which
-kitty-pounce doesn't touch.)
+one had nothing bound to it.
+
+<img src="assets/jiffy75.jpg" alt="Jiffy 75 split keyboard with a hand turning the unused left rotary knob" width="600">
+
+A flat, wrap-around ring was the obvious fit for a knob: turn it one way or
+the other and step through every window, tab and OS window as a single
+continuous list. That turned out to be a genuinely faster way to find a
+specific agent than hunting through three separate navigation shortcuts. (I
+still use kitty's own built-in `ctrl+shift+l` to cycle layouts within an OS
+window -- a different axis entirely, which kitty-pounce doesn't touch.)
 
 kitty-pounce itself doesn't bind the knob -- see Installation below for
 wiring up whichever key or device you like.
