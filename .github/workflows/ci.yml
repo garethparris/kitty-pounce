@@ -9,25 +9,40 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       - run: uv run ruff check .
       - run: uv run ruff format --check .
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       - run: uv run pytest
 
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       # kitty is not pip-installable; resolve its internal types by cloning
-      # its source as a sibling directory (see CONTRIBUTING.md).
-      - run: git clone --depth 1 https://github.com/kovidgoyal/kitty.git ../kitty
+      # its source as a sibling directory (see CONTRIBUTING.md). Pinned to
+      # the version the README claims is verified, so this required check
+      # can't start failing from unrelated upstream kitty changes.
+      - run: git clone --depth 1 --branch v0.48.2 https://github.com/kovidgoyal/kitty.git ../kitty
       - run: uv run pyright pounce.py
       - run: uv run pyright tests
+
+  typecheck-kitty-head:
+    # Non-blocking: runs the same check against kitty's default branch, so a
+    # real API break shows up here first instead of silently at runtime.
+    # This is the actual point of the _protocols_match_real_kitty_types
+    # compile-time check in pounce.py.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+      - run: git clone --depth 1 https://github.com/kovidgoyal/kitty.git ../kitty
+      - run: uv run pyright pounce.py

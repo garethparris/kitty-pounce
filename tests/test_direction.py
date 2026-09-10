@@ -12,10 +12,10 @@ def test_prev_means_backward():
 
 
 def test_unknown_direction_raises():
-    with pytest.raises(ValueError, match='next.*prev'):
+    with pytest.raises(ValueError, match=r'next.*prev'):
         parse_direction(['pounce.py', 'sideways'])
 
 
 def test_missing_direction_raises():
-    with pytest.raises(ValueError, match='next.*prev'):
+    with pytest.raises(ValueError, match=r'next.*prev'):
         parse_direction(['pounce.py'])

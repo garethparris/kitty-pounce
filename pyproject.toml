@@ -1,7 +1,7 @@
 [project]
 name = "kitty-pounce"
 version = "0.1.0"
-description = "Cycle kitty tabs across every OS window as one flat ring"
+description = "Cycle kitty windows across every tab and OS window as one flat ring"
 requires-python = ">=3.12"
 license = "MIT"
 
@@ -20,7 +20,7 @@ dev = [
 line-length = 160
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "ANN"]
+select = ["E", "F", "I", "ANN", "B", "UP", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests trade full annotation rigor for readability; pounce.py is the

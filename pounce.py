@@ -10,7 +10,7 @@ one self-contained file with minimal top-level imports.
 """
 
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from typing import TYPE_CHECKING, Any, Protocol, TypeVar
+from typing import TYPE_CHECKING, Any, Protocol
 
 try:
     # The fallback below is narrower than the real decorator's kwargs, deliberately.
@@ -117,8 +117,6 @@ if TYPE_CHECKING:
 
 _DIRECTIONS = {'next': +1, 'prev': -1}
 
-_T = TypeVar('_T')
-
 
 def parse_direction(args: list[str]) -> int:
     """Return +1 for 'next', -1 for 'prev'.
@@ -164,6 +162,10 @@ def _tabs_in_order(
             from kitty.fast_data_types import get_os_window_pos
 
         def sort_key(os_window_id: int) -> tuple[float, float]:
+            # get_os_window_pos really can return None for an os_window_id it
+            # can't place (state.c:1353-1360's WITH_OS_WINDOW falls through to
+            # Py_RETURN_NONE) -- kitty's own fast_data_types.pyi stub omits
+            # `| None` from the return type, so this isn't a redundant check.
             pos = get_os_window_pos(os_window_id)
             if pos is None:
                 return (float('inf'), float('inf'))
@@ -189,7 +191,11 @@ def build_ring(
     what kitty's own next_window/previous_window would cycle to).
 
     This is the single ordering seam: swapping the OS-window strategy (see
-    `_tabs_in_order`) touches nothing else in the file.
+    `_tabs_in_order`) touches nothing else in the file. `order` is not yet
+    exposed on the `map` line -- `handle_result` always calls this with the
+    default -- so `'position'` currently ships as a tested but unreachable
+    extension point for a future third `map` argument, not a user-facing
+    option.
     """
     ring: list[WindowLike] = []
     for tab in _tabs_in_order(boss, order, get_os_window_pos):
@@ -199,17 +205,17 @@ def build_ring(
     return ring
 
 
-def resolve_target(ring: list[_T], active: _T | None, delta: int) -> _T | None:
+def resolve_target[T](ring: list[T], active: T | None, delta: int) -> T | None:
     """Return the ring entry `delta` steps from `active`, or None for a no-op.
 
     Generic in the ring's element type: this function only needs identity
-    equality, not anything Tab-specific -- kept that way so it stays testable
-    with plain values, with no kitty types involved.
+    equality, not anything Window-specific -- kept that way so it stays
+    testable with plain values, with no kitty types involved.
 
-    None means: 0/1 entries in the ring, or no known active tab (moving would
-    be arbitrary). If `active` is set but not found in the ring, index 0 is
-    treated as the current position -- this is the documented fallback for a
-    stale reference.
+    None means: 0/1 entries in the ring, or no known active window (moving
+    would be arbitrary). If `active` is set but not found in the ring, index
+    0 is treated as the current position -- this is the documented fallback
+    for a stale reference.
     """
     if len(ring) < 2 or active is None:
         return None

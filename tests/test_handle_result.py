@@ -54,8 +54,18 @@ def test_noop_when_target_is_already_the_active_window():
     assert boss.remote_control_calls == []
 
 
+def test_noop_when_no_window_is_focused():
+    # boss.active_window is genuinely None when no OS window has focus.
+    tab = single_window_tab(1, 2)
+    boss = FakeBoss({100: FakeTabManager([tab])})  # active_window defaults to None
+
+    handle_result(['pounce.py', 'next'], None, 0, boss)
+
+    assert boss.remote_control_calls == []
+
+
 def test_unknown_direction_raises():
     boss = FakeBoss({100: FakeTabManager([single_window_tab(1)])})
 
-    with pytest.raises(ValueError, match='next.*prev'):
+    with pytest.raises(ValueError, match=r'next.*prev'):
         handle_result(['pounce.py', 'sideways'], None, 0, boss)

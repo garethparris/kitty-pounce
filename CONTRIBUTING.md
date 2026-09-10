@@ -15,10 +15,13 @@ actual terminal, and kitty's bundled Python can't see site-packages), so
 `pounce.py`'s `TYPE_CHECKING`-only imports (`kitty.boss`, `kitty.tabs`,
 `kitty.window`, `kitty.window_list`) can only be resolved for type-checking by
 pointing pyright at a real kitty source checkout, cloned as a **sibling** of
-this repo:
+this repo. Pin it to the version the README claims is verified (currently
+v0.48.2), matching what CI's required `typecheck` job clones -- CI also runs
+a second, non-blocking job against kitty's default branch to catch real API
+drift early:
 
 ```sh
-git clone --depth 1 https://github.com/kovidgoyal/kitty.git ../kitty
+git clone --depth 1 --branch v0.48.2 https://github.com/kovidgoyal/kitty.git ../kitty
 ```
 
 Then:

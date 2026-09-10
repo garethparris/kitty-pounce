@@ -52,14 +52,14 @@ def test_resolve_target_empty_ring_is_noop():
     assert resolve_target([], active=None, delta=+1) is None
 
 
-def test_resolve_target_single_tab_ring_is_noop():
+def test_resolve_target_single_entry_ring_is_noop():
     assert resolve_target(['a'], active='a', delta=+1) is None
 
 
-def test_resolve_target_no_active_tab_is_noop():
-    # boss.active_tab can genuinely be None (no OS windows have focus). With
+def test_resolve_target_no_active_window_is_noop():
+    # boss.active_window can genuinely be None (no OS window has focus). With
     # no known current position, moving would be arbitrary, so this is a
-    # no-op -- distinct from "active tab not in the ring" below.
+    # no-op -- distinct from "active window not in the ring" below.
     ring = ['a', 'b', 'c']
     assert resolve_target(ring, active=None, delta=+1) is None
 

@@ -5,14 +5,36 @@ through every window, in every tab, in every OS window, as one flat ring --
 one keypress moves forward or backward, wrapping from the last one back to
 the first and vice versa.
 
-A quick terminology note: what you get with `alt+enter` -- a split pane
-inside a tab -- is a kitty **window**, not a tab. A **tab** is what you see
-in the tab bar at the top of a kitty OS window. An **OS window** is an actual
-operating-system-level window, which can hold several tabs, each of which can
-hold several windows. kitty-pounce flattens all three levels: cycling visits
-every window in the current tab first, then moves to the next tab's windows,
-then the next OS window's, wrapping from the very last window back to the
-very first.
+## Origin
+
+I run a lot of Claude Code agents at once, each in its own kitty window or
+tab, and finding the right one again was getting harder as the count grew.
+Kitty already has ways to move between windows, tabs and OS windows -- but
+they're three separate keyboard shortcuts, each scoped to a different level,
+so getting to "the next agent" meant picking the right shortcut for wherever
+it happened to live.
+
+The immediate trigger was hardware: my Jiffy 75 keyboard has two rotary
+knobs. The right one is already spoken for -- volume and mute -- but the left
+one had nothing bound to it. A flat, wrap-around ring was the obvious fit for
+a knob: turn it one way or the other and step through every window, tab and
+OS window as a single continuous list. That turned out to be a genuinely
+faster way to find a specific agent than hunting through three separate
+navigation shortcuts. (I still use kitty's own built-in `ctrl+shift+l` to
+cycle layouts within an OS window -- a different axis entirely, which
+kitty-pounce doesn't touch.)
+
+kitty-pounce itself doesn't bind the knob -- see Installation below for
+wiring up whichever key or device you like.
+
+A quick terminology note: a split pane inside a tab -- made with kitty's
+`new_window` action, bound by default to `kitty_mod+enter` -- is a kitty
+**window**, not a tab. A **tab** is what you see in the tab bar at the top of
+a kitty OS window. An **OS window** is an actual operating-system-level
+window, which can hold several tabs, each of which can hold several windows.
+kitty-pounce flattens all three levels: cycling visits every window in the
+current tab first, then moves to the next tab's windows, then the next OS
+window's, wrapping from the very last window back to the very first.
 
 ## Why would you want that?
 
@@ -35,7 +57,7 @@ Developed and verified against **kitty 0.48.2**. No lower bound is claimed
 yet -- kitty's internal APIs are explicitly "neither entirely stable nor
 documented" (see kitty's own [custom kittens
 docs](https://sw.kovidgoyal.net/kitty/kittens/custom/)), so a minimum version
-will be stated here once CI's version matrix has actually verified one.
+will be stated here once CI tests against more than one kitty release.
 
 Requires Python >= 3.12 (kitty's own floor).
 

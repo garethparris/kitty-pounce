@@ -1,3 +1,5 @@
+import pytest
+
 from pounce import build_ring
 from tests.fakes import FakeBoss, FakeTab, FakeTabManager, FakeWindow, FakeWindowGroup, single_window_tab
 
@@ -70,6 +72,13 @@ def test_position_order_sorts_unknown_position_last():
     ring = build_ring(boss, order='position', get_os_window_pos=positions.get)
 
     assert [w.id for w in ring] == [2, 1]
+
+
+def test_unknown_order_raises():
+    boss = FakeBoss({100: FakeTabManager([single_window_tab(1)])})
+
+    with pytest.raises(ValueError, match=r'unknown order'):
+        build_ring(boss, order='sideways')
 
 
 def _tab_with_groups(groups: list[list[int]]) -> FakeTab:
