@@ -1,0 +1,48 @@
+[project]
+name = "kitty-pounce"
+version = "0.1.0"
+description = "Cycle kitty tabs across every OS window as one flat ring"
+requires-python = ">=3.12"
+license = "MIT"
+
+# Not a distributable package: kitty's `map ... kitten` action loads pounce.py
+# directly from the config directory, and kitty's bundled Python cannot see
+# site-packages. This file exists purely to configure dev tooling.
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+    "pyright>=1.1",
+]
+
+[tool.ruff]
+line-length = 160
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests trade full annotation rigor for readability; pounce.py is the
+# shipped file and stays fully annotated.
+"tests/*" = ["ANN"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.pyright]
+# pounce.py is the shipped file and stays fully strict. tests/ is checked at
+# basic level only: pytest.mark.parametrize injects untyped arguments and
+# strict mode flags that (and similar dynamic-fixture patterns) with no real
+# bug behind it -- same trade-off as exempting tests/ from ruff's ANN rule.
+strict = ["pounce.py"]
+# A sibling kitty source checkout (see CONTRIBUTING.md) so `from kitty.boss
+# import Boss` resolves for type-checking. kitty is not pip-installable.
+extraPaths = ["../kitty"]
+# kitty.fast_data_types is a compiled C extension: its .pyi stub resolves but
+# the .so has no .py source for pyright to cross-check. Expected, not a finding.
+reportMissingModuleSource = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

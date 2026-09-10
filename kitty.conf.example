@@ -1,0 +1,8 @@
+# Add these two lines to your ~/.config/kitty/kitty.conf, then reload with
+# ctrl+shift+f5 (or restart kitty). See README.md for installation.
+#
+# No allow_remote_control and no listen_on needed -- pounce.py runs in-process
+# as a no-UI kitten, not over the remote-control socket.
+
+map shift+page_down kitten pounce.py next
+map shift+page_up   kitten pounce.py prev
